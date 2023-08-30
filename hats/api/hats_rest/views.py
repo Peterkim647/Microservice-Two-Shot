@@ -20,7 +20,10 @@ class HatListEncoder(ModelEncoder):
     properties = [
         "id",
         "style",
+        "color",
+        "fabric",
         "picture_url",
+        "location",
     ]
 
     def get_extra_data(self, o):
@@ -96,3 +99,6 @@ def api_show_hat(request, id):
             encoder=HatDetailEncoder,
             safe=False,
         )
+    elif request.method == "DELETE":
+        count, _ = Hat.objects.filter(id=id).delete()
+        return JsonResponse({'deleted': count > 0})
