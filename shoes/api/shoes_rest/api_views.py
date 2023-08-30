@@ -3,17 +3,36 @@ from django.views.decorators.http import require_http_methods
 import json
 
 from common.json import ModelEncoder
-from .models import Shoe
+from .models import Shoe, BinVO
+
+
+class BinVOEncoder(ModelEncoder):
+    model = BinVO
+    properties = [
+        "import_href",
+        "closet_name",
+        "bin_number",
+        "bin_size",
+    ]
 
 
 class ShoeListEncoder(ModelEncoder):
     model = Shoe
     properties = [
+        "id",
         "manufacturer",
         "model_name",
         "color",
+        "bin",
         "picture_url",
     ]
+
+    def get_extra_data(self, o):
+        if o.bin:
+            return {"bin": o.bin.closet_name}
+        else:
+            return {"bin": None}
+
 
 class ShoeDetailEncoder(ModelEncoder):
     model= Shoe
@@ -23,7 +42,10 @@ class ShoeDetailEncoder(ModelEncoder):
         "model_name",
         "color",
         "picture_url",
+        "bin",
     ]
+
+    encoders = {"bin": BinVOEncoder()}
 
 
 @require_http_methods(["GET", "POST"])
@@ -36,10 +58,21 @@ def api_list_shoes(request):
         )
     else:
         content = json.loads(request.body)
+
+        try:
+            bin_href = content["bin"]
+            bin = BinVO.objects.get(import_href=bin_href)
+            content["bin"] = bin
+        except BinVO.DoesNotExist:
+            return JsonResponse(
+                {"message": "Invalied bin id"},
+                status=400,
+            )
+
         shoe = Shoe.objects.create(**content)
         return JsonResponse(
             shoe,
-            encoder=ShoeListEncoder,
+            encoder=ShoeDetailEncoder,
             safe=False,
         )
 
