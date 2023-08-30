@@ -4,9 +4,9 @@ function ShoeForm() {
     const [bins, setBins] = useState([]);
     const [manufacturer, setManufacturer] = useState('');
     const [model, setModel] = useState('');
-    const [shoeColor, setShoeColor] = useState('');
+    const [color, setColor] = useState('');
     const [pictureUrl, setPictureUrl] = useState('');
-    const [selectedBin, setSelectedBin] = useState('');
+    const [bin, setBin] = useState('');
 
     const handleManufacturerChange = (event) => {
         const value = event.target.value;
@@ -18,9 +18,9 @@ function ShoeForm() {
         setModel(value);
     }
 
-    const handleShoeColorChange = (event) => {
+    const handleColorChange = (event) => {
         const value = event.target.value;
-        setShoeColor(value);
+        setColor(value);
     }
 
     const handlePictureUrlChange = (event) => {
@@ -30,16 +30,16 @@ function ShoeForm() {
 
     const handleBinChange = (event) => {
         const value = event.target.value;
-        setSelectedBin(value);
+        setBin(value);
     }
 
     const fetchData = async () => {
-        const url = 'http://localhost:8080/api/bins/';
+        const url = 'http://localhost:8100/api/bins/';
         const response = await fetch(url);
 
         if (response.ok) {
             const data = await response.json();
-            setBins(data);
+            setBins(data.bins);
         }
     }
 
@@ -50,13 +50,13 @@ function ShoeForm() {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const data = {
-            manufacturer,
-            model_name: model,
-            color: shoeColor,
-            picture_url: pictureUrl,
-            bin: selectedBin
-        };
+        const data = {};
+        data.manufacturer = manufacturer;
+        data.model_name=  model;
+        data.color = color;
+        data.picture_url = pictureUrl;
+        data.bin = bin;
+
 
         const shoeUrl = 'http://localhost:8080/api/shoes/';
         const fetchConfig = {
@@ -73,9 +73,9 @@ function ShoeForm() {
             console.log(newShoe);
             setManufacturer('');
             setModel('');
-            setShoeColor('');
+            setColor('');
             setPictureUrl('');
-            setSelectedBin('');
+            setBin('');
         }
     }
 
@@ -113,8 +113,8 @@ function ShoeForm() {
                         </div>
                         <div className="form-floating mb-3">
                             <input
-                                onChange={handleShoeColorChange}
-                                value={shoeColor}
+                                onChange={handleColorChange}
+                                value={color}
                                 placeholder="Color"
                                 required
                                 type="text"
@@ -143,7 +143,7 @@ function ShoeForm() {
                             </label>
                             <select
                                 onChange={handleBinChange}
-                                value={selectedBin}
+                                value={bin}
                                 required
                                 id="bin"
                                 name="bin"
@@ -151,8 +151,8 @@ function ShoeForm() {
                             >
                                 <option value="">Choose a Bin</option>
                                 {bins.map(bin => (
-                                    <option key={bin.import_href} value={bin.import_href}>
-                                        {bin.closet_name} - Bin {bin.bin_number}
+                                    <option key={bin.href} value={bin.href}>
+                                        {bin.closet_name}
                                     </option>
                                 ))}
                             </select>
