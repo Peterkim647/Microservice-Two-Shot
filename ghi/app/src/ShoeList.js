@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 function ShoeList() {
     const [shoe, setShoe] = useState([]);
@@ -19,7 +20,7 @@ function ShoeList() {
     const deleteShoe = async (id) => {
         const url = `http://localhost:8080/api/shoes/${id}/`;
         const response = await fetch(url, {
-            method: "DELETE"
+            method: 'DELETE'
         });
         if (response.ok) {
             fetchData();
@@ -27,20 +28,23 @@ function ShoeList() {
     }
 
     return (
-        <table className="table table-striped">
-            <thead>
-                <tr>
-                    <th>Manufacturer</th>
-                    <th>Model Name</th>
-                    <th>Color</th>
-                    <th>Bin</th>
-                    <th>Picture URL</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-                {shoe.map(shoe => {
-                    return (
+        <div>
+            <div className="mb-3">
+                <Link to="/shoes/new" className="btn btn-primary">Add Shoe</Link>
+            </div>
+            <table className="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Manufacturer</th>
+                        <th>Model Name</th>
+                        <th>Color</th>
+                        <th>Bin</th>
+                        <th>Picture URL</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {shoe.map(shoe => (
                         <tr key={shoe.id}>
                             <td>{shoe.manufacturer}</td>
                             <td>{shoe.model_name}</td>
@@ -52,13 +56,13 @@ function ShoeList() {
                                 )}
                             </td>
                             <td>
-                            <button onClick={() => deleteShoe(shoe.id)}>Delete</button>
+                                <button className="btn btn-danger" onClick={() => deleteShoe(shoe.id)}>Delete</button>
                             </td>
                         </tr>
-                    );
-                })}
-            </tbody>
-        </table>
+                    ))}
+                </tbody>
+            </table>
+        </div>
     );
 }
 

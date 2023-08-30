@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MainPage from './MainPage';
 import ShoeList from './ShoeList';
+import ShoeForm from './ShoeForm'
 import Nav from './Nav';
 
 function App() {
@@ -11,8 +12,9 @@ function App() {
         <Routes>
           <Route path="/" element={<MainPage />} />
         </Routes>
-        <Routes>
-          <Route path="/shoes" element={<ShoeList />} />
+        <Routes path="/">
+          <Route path="shoes" element={<ShoeList />} />
+          <Route path="/shoes/new" element={<ShoeForm />} />
         </Routes>
       </div>
     </BrowserRouter>
