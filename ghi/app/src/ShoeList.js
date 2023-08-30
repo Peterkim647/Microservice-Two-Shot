@@ -8,7 +8,6 @@ function ShoeList() {
         const response = await fetch(url);
         if (response.ok) {
             const data = await response.json();
-            console.log("aa", data)
             setShoe(data.shoe);
         }
     }
@@ -17,8 +16,8 @@ function ShoeList() {
         fetchData();
     }, []);
 
-    const deleteShoe = async (shoeId) => {
-        const url = `http://localhost:8080/api/shoes/${shoeId}/`;
+    const deleteShoe = async (id) => {
+        const url = `http://localhost:8080/api/shoes/${id}/`;
         const response = await fetch(url, {
             method: "DELETE"
         });
